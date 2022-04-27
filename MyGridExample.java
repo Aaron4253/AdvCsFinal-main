@@ -66,6 +66,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
    protected static int mouseX;			//locations for the mouse pointer
    protected static int mouseY;
    private int money;
+   private double rateIncrease = 0;
    public MyGridExample()
    {
       addMouseListener( this );
@@ -357,12 +358,13 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
          if(spawnRate){
             int random = (int)(Math. random()*(4-0+1))+0;//controls the lane that the zombie is spawned in
             int randomHealth = (int)(Math.random()*(500-100+1)) + 100;
-            zombies.add(new zombie(9.2, random, randomHealth, 1, false));           }
+            zombies.add(new zombie(9.2, random, randomHealth, 1, false));  
+         }
          if(t){
             zombies.add(new zombie(9.2, 3, 500, 1, false));   
             t = false;
          }
-      
+         rateIncrease += 0.00001;
          for(int index = 0; index < zombies.size(); index++){
             zombies.get(index).incrementX();
             zombies.get(index).incrementFrame();
@@ -451,9 +453,9 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
                         for(int k = 0; k < zombies.size(); k++){
                            //System.out.println(distanceOf(zombies.get(k).getX(), zombies.get(k).getY(), projectiles.get(j).getX(), projectiles.get(j).getY()) + " the x of zombie: " + zombies.get(k).getX() + "the y of zombie: " + zombies.get(k).getY());
                            if(distanceOf(zombies.get(k).getX(), zombies.get(k).getY(), projectiles.get(j).getX(), projectiles.get(j).getY()) < 2){
-                              int percentOfDamage = (int)(((2 - distanceOf(zombies.get(k).getX(), zombies.get(k).getY(), projectiles.get(j).getX(), projectiles.get(j).getY()))/2 + 0.35) * projectiles.get(j).getDamage());
-                              zombies.get(k).deductHp(percentOfDamage);
-                           //for some reason this has to be here idk
+                              int damageFallOffCalculation = (int)(((2 - distanceOf(zombies.get(k).getX(), zombies.get(k).getY(), projectiles.get(j).getX(), projectiles.get(j).getY()))/2 + 0.35) * projectiles.get(j).getDamage());
+                              //^damage calculation: zombies hit in the center are dealt 135% of the bomb's damage, falls off based on distance, at farthest distance zombie is dealt 35% damage.
+                              zombies.get(k).deductHp(damageFallOffCalculation);
                               if(zombies.get(k).getHealth() <= 0){//check if a zombie died. If so, zombies is removed 
                                  incineratedZombies.add(new incineratedZombie(zombies.get(k).getX(), zombies.get(k).getY(), 300));
                                  zombies.remove(k);

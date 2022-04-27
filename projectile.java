@@ -23,7 +23,7 @@ class projectile{
     }
 
     public void incrementX(){
-        x+=0.01;
+        x+=0.02;
         count++;
     }
     public void setX(Double x){

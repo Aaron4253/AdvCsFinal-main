@@ -20,7 +20,7 @@ class zombie{
         this.damage = damage;
         this.currentFrame = 0;
         this.isEating = false;
-        this.movementSpeed = 0.0005;
+        this.movementSpeed = 0.0007;
         this.frozen = frozen;
         this.randomState = (int)(Math.random()*(5-1+1)+1);
     }
