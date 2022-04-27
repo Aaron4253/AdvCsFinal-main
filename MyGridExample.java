@@ -29,13 +29,22 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
    private ImageIcon wallNut2 = new ImageIcon("graphics/Walnut2.gif");
    private ImageIcon wallNut3 = new ImageIcon("graphics/Walnut3.gif");
    private ImageIcon zombie = new ImageIcon("graphics/zombie2.gif");	
+   private ImageIcon zombieWalking1 = new ImageIcon("graphics/zombieWalking1.gif");	
+   private ImageIcon zombieWalking2 = new ImageIcon("graphics/zombieWalking2.gif");	
+   private ImageIcon zombieWalking3 = new ImageIcon("graphics/zombieWalking3.gif");
+   private ImageIcon zombieWalking4 = new ImageIcon("graphics/zombieWalking4.gif");
+   private ImageIcon icezombieWalking1 = new ImageIcon("graphics/iceZombieWalking1.gif");	
+   private ImageIcon icezombieWalking2 = new ImageIcon("graphics/iceZombieWalking2.gif");	
+   private ImageIcon icezombieWalking3 = new ImageIcon("graphics/iceZombieWalking3.gif");
+   private ImageIcon icezombieWalking4 = new ImageIcon("graphics/iceZombieWalking4.gif");		
    private ImageIcon iceZombie = new ImageIcon("graphics/iceZombie.gif");	
    private ImageIcon zombieEating = new ImageIcon("graphics/zombieEating.gif");	
    private ImageIcon iceZombieEating = new ImageIcon("graphics/iceZombieEating.gif");	
    private ImageIcon dyingZombie = new ImageIcon("graphics/dyingZombie.gif");	
    private ImageIcon iceDyingZombie = new ImageIcon("graphics/iceDyingZombie.gif");	
    private ImageIcon incineratedZombie = new ImageIcon("graphics/IncineratedZombie.gif");	
-
+   private Image dbImage;
+   private Graphics dbg;
 
    private static final int SIZE=60;	//size of cell being drawn
  
@@ -219,7 +228,33 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
             }else if(z.isEating()){
                g.drawImage(zombieEating.getImage(), (int)(z.getX()*SIZE + SIZE) - 80, z.getY()*SIZE + SIZE + 15, SIZE+60, SIZE+30, null); 
             }else{
-               g.drawImage(z.getPicture().getImage(), (int)(z.getX()*SIZE + SIZE) - 80, z.getY()*SIZE + SIZE + 15, SIZE+60, SIZE+30, null);  
+               int randomState = z.getRandomState();
+               if(z.getMovementSpeed() < 0.0005){
+                  switch (randomState){
+                     case 1: g.drawImage(iceZombie.getImage(), (int)(z.getX()*SIZE + SIZE) - 80, z.getY()*SIZE + SIZE + 15, SIZE+60, SIZE+30, null);  
+                     break;
+                     case 2: g.drawImage(icezombieWalking1.getImage(), (int)(z.getX()*SIZE + SIZE) - 80, z.getY()*SIZE + SIZE + 15, SIZE+60, SIZE+30, null);  
+                     break;
+                     case 3: g.drawImage(icezombieWalking3.getImage(), (int)(z.getX()*SIZE + SIZE) - 80, z.getY()*SIZE + SIZE + 15, SIZE+60, SIZE+30, null); 
+                     break;
+                     case 4: g.drawImage(icezombieWalking4.getImage(), (int)(z.getX()*SIZE + SIZE) - 80, z.getY()*SIZE + SIZE + 15, SIZE+60, SIZE+30, null);  
+                     break;  
+                     case 5:  g.drawImage(icezombieWalking2.getImage(), (int)(z.getX()*SIZE + SIZE) - 80, z.getY()*SIZE + SIZE + 15, SIZE+60, SIZE+30, null);                     
+                  }  
+               }else{
+                  switch (randomState){
+                     case 1: g.drawImage(zombie.getImage(), (int)(z.getX()*SIZE + SIZE) - 80, z.getY()*SIZE + SIZE + 15, SIZE+60, SIZE+30, null);  
+                     break;
+                     case 2: g.drawImage(zombieWalking1.getImage(), (int)(z.getX()*SIZE + SIZE) - 80, z.getY()*SIZE + SIZE + 15, SIZE+60, SIZE+30, null);  
+                     break;
+                     case 3: g.drawImage(zombieWalking3.getImage(), (int)(z.getX()*SIZE + SIZE) - 80, z.getY()*SIZE + SIZE + 15, SIZE+60, SIZE+30, null); 
+                     break;
+                     case 4: g.drawImage(zombieWalking4.getImage(), (int)(z.getX()*SIZE + SIZE) - 80, z.getY()*SIZE + SIZE + 15, SIZE+60, SIZE+30, null);  
+                     break;
+                     case 5: g.drawImage(zombieWalking2.getImage(), (int)(z.getX()*SIZE + SIZE) - 80, z.getY()*SIZE + SIZE + 15, SIZE+60, SIZE+30, null);           
+                  }
+               }
+               
                //draw zombie here
             }
          }
@@ -442,7 +477,6 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
                            if(zombies.get(index).getHealth() <= 0){//check if a zombie died. If so, zombies is removed 
                               dyingZombies.add(new dyingZombie(zombies.get(index).getX(), zombies.get(index).getY(), 300, true));
                               zombies.remove(index);
-
                               money += 50;
                            }
                         }else{
