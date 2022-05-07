@@ -43,6 +43,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
    private ImageIcon dyingZombie = new ImageIcon("graphics/dyingZombie.gif");	
    private ImageIcon iceDyingZombie = new ImageIcon("graphics/iceDyingZombie.gif");	
    private ImageIcon incineratedZombie = new ImageIcon("graphics/IncineratedZombie.gif");	
+   private ImageIcon sun = new ImageIcon("graphics/sun.gif");
    private Image dbImage;
    private Graphics dbg;
 
@@ -59,6 +60,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
    private static ArrayList<explosion> explosions; 
    private static ArrayList<dyingZombie> dyingZombies;
    private static ArrayList<incineratedZombie> incineratedZombies;
+   private static ArrayList<sun> suns;
    private static int playerR;			//start row for the player selection tool
    private static int playerC;			//start col for the player selection tool
    private static int selected;        //value of the piece selected (0-none, 1-black chip, 2-white chip)
@@ -102,6 +104,9 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
       //incinerated zombies
       incineratedZombies = new ArrayList<incineratedZombie>();
       //incinerated zombies end
+      //sun logic
+      suns = new ArrayList<sun>();
+      //sun end
       selected = 0; //holds onto the image of the plant selected
       int nextValue = 0;            //to assign alternating values to the board (0,1)
       for(int r=0;r<board.length;r++)	
@@ -114,7 +119,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
                pieces[r][c] = (int)(Math.random()*3);
                */
          }
-         nextValue = (nextValue+1)%2;
+         nextValue = (nextValue + 1) % 2;
       }
      
       playerR = board.length/2;							//start player position in the middle
@@ -261,6 +266,9 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
          }
       }
       
+      for(sun s : suns){
+         g.drawImage(sun.getImage(),  (int)(s.getX()*SIZE + SIZE), (int)s.getY()*SIZE + SIZE + 50, 40, 40, null);
+      }
       
       updateMouse(g);
       updateMoney(g);
@@ -355,6 +363,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
       {
          //for zombies
          boolean spawnRate = (Math.random() < 0.0025);//controls the rate at which zombies are randomly spawned
+         boolean sunSpawnRate = (Math.random() < 0.03);
          if(spawnRate){
             int random = (int)(Math. random()*(4-0+1))+0;//controls the lane that the zombie is spawned in
             int randomHealth = (int)(Math.random()*(500-100+1)) + 100;
@@ -364,6 +373,27 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
             zombies.add(new zombie(9.2, 3, 500, 1, false));   
             t = false;
          }
+
+         if(sunSpawnRate){
+            int randomX = (int)(Math.random()*(board.length - 0+1))+0;
+            int randomY = (int)(Math.random()*(board[0].length-0+1))+0;
+            suns.add(new sun(randomX, (double) randomY));
+         }
+
+         for(int i = 0; i < suns.size(); i++){
+            if(suns.get(i).getY() > 5){
+               suns.remove(i);
+               i--;
+            }else if(suns.get(i).isRemoved()){
+               suns.remove(i);
+               i--;
+            }else{
+               suns.get(i).decreaseY();
+               
+            }
+
+         }
+
          rateIncrease += 0.00001;
          for(int index = 0; index < zombies.size(); index++){
             zombies.get(index).incrementX();
