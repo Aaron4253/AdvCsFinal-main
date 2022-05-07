@@ -14,7 +14,11 @@ class plant{
         this.health = health;
         this.damage = damage;
         this.delay = delay;
-		currentFrame = delay - 1;
+		if(delay > 0 && damage == 0){
+			currentFrame = 0;
+		}else{
+			currentFrame = delay - 1;
+		}
     }
 
 	public int getX() {
@@ -61,7 +65,7 @@ class plant{
         this.health -= x;
     }
 
-	public Object getCurrentFrame() {
+	public int getCurrentFrame() {
 		return this.currentFrame;
 	}
 

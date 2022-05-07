@@ -44,8 +44,9 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
    private ImageIcon iceDyingZombie = new ImageIcon("graphics/iceDyingZombie.gif");	
    private ImageIcon incineratedZombie = new ImageIcon("graphics/IncineratedZombie.gif");	
    private ImageIcon sun = new ImageIcon("graphics/sun.gif");
-   private Image dbImage;
-   private Graphics dbg;
+   private ImageIcon sunFlower = new ImageIcon("graphics/sunFlower.gif");
+   private ImageIcon sunFlowerIcon = new ImageIcon("graphics/sunFlowerIcon.gif");
+
 
    private static final int SIZE=60;	//size of cell being drawn
  
@@ -69,6 +70,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
    protected static int mouseY;
    private int money;
    private double rateIncrease = 0;
+   public int sunFlowerDelay = 2000;
    public MyGridExample()
    {
       addMouseListener( this );
@@ -88,6 +90,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
       buyMenu[2] = new plant(0, 0, 500, 20, 500);//peashooter is 2
       buyMenu[3] = new plant(0, 0, 500, 25, 500);//iceShooter is 3
       buyMenu[4] = new plant(0,0, 500, 500, 5000);//coconut cannon is 4
+      buyMenu[5] = new plant(0, 0, 500, 0, sunFlowerDelay);
       //plant logic ends here
       //projectile logic begins here
       projectiles = new ArrayList<projectile>();
@@ -139,6 +142,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
       g.drawImage(wallNut.getImage(), 100, 20, SIZE, SIZE, null);
       g.drawImage(iceShooter.getImage(), 180, 20, SIZE, SIZE, null);
       g.drawImage(coconutCannonIcon.getImage(), 260, 20, SIZE, SIZE, null);
+      g.drawImage(sunFlowerIcon.getImage(), 340, 20, SIZE, SIZE, null);
    
       int x =0, y = 100;	//if y is ever changed, go to int mouseR = ((mouseY-100)/SIZE); and change its value  //upper left corner location of where image will be drawn
       int q = 0, w = 100;
@@ -159,7 +163,9 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
             else if(pieces[r][c]==3)
                g.drawImage(iceShooter1.getImage(), x, y, SIZE, SIZE, null);   
             else if(pieces[r][c] == 4)
-               g.drawImage(coconutCannon.getImage(), x, y, SIZE+5, SIZE+5, null);         
+               g.drawImage(coconutCannon.getImage(), x, y, SIZE+5, SIZE+5, null);   
+            else if(pieces[r][c] == 5)
+               g.drawImage(sunFlower.getImage(), x, y, SIZE, SIZE, null);      
             /*if(r==playerR && c==playerC)	   //draw the crosshair on the board after the cell has been drawn
             {
                if(selected == 0)             //no piece has been selected
@@ -267,7 +273,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
       }
       
       for(sun s : suns){
-         g.drawImage(sun.getImage(),  (int)(s.getX()*SIZE + SIZE), (int)s.getY()*SIZE + SIZE + 50, 40, 40, null);
+         g.drawImage(sun.getImage(),  (int)(s.getX()*SIZE), (int)s.getY()*SIZE, 70, 70, null);
       }
       
       updateMouse(g);
@@ -282,11 +288,13 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
          g.drawImage(wallNut1.getImage(), mouseX-SIZE/2, mouseY-SIZE/2, SIZE, SIZE, null);
       }
       if(selected == 3){
-         g.drawImage(iceShooter1.getImage(), mouseX-SIZE/2, mouseY-SIZE/2, SIZE, SIZE, null);
-      
+         g.drawImage(iceShooter1.getImage(), mouseX-SIZE/2, mouseY-SIZE/2, SIZE, SIZE, null);      
       }
       if(selected == 4){
          g.drawImage(coconutCannon.getImage(), mouseX-SIZE/2, mouseY-SIZE/2, SIZE, SIZE, null);
+      }
+      if(selected == 5){
+         g.drawImage(sunFlower.getImage(), mouseX-SIZE/2, mouseY-SIZE/2, SIZE, SIZE, null);
       }
    }
 
@@ -300,6 +308,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
       g.drawString("$50", 100, 20);
       g.drawString("$150", 180, 20);
       g.drawString("$400", 260, 20);
+      g.drawString("$50", 340, 20);
    }
 
    public double distanceOf(double x1, double y1, double x2, double y2){
@@ -355,33 +364,39 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
       g.fillRect(0, 0, (board[0].length*SIZE), (board.length*SIZE));
       showBoard(g);					//draw the contents of the array board on the screen
    }
-   
+   public int count = 0;
 	 //***BEGIN MOUSE STUFF***
    private class Listener implements ActionListener
    {
       public void actionPerformed(ActionEvent e)	//this is called for each timer iteration
       {
          //for zombies
+         count++;
          boolean spawnRate = (Math.random() < 0.0025);//controls the rate at which zombies are randomly spawned
-         boolean sunSpawnRate = (Math.random() < 0.03);
+         boolean sunSpawnRate = count > 5000;
          if(spawnRate){
             int random = (int)(Math. random()*(4-0+1))+0;//controls the lane that the zombie is spawned in
             int randomHealth = (int)(Math.random()*(500-100+1)) + 100;
             zombies.add(new zombie(9.2, random, randomHealth, 1, false));  
          }
+         int randomY = 2;
          if(t){
-            zombies.add(new zombie(9.2, 3, 500, 1, false));   
+            zombies.add(new zombie(9.2, 3, 500, 1, false)); 
+            int randomX = (int)(Math.random()*(board.length - 0+1))+0;            
+            suns.add(new sun(randomX, (double) randomY, 0.001));
             t = false;
          }
-
+         
          if(sunSpawnRate){
             int randomX = (int)(Math.random()*(board.length - 0+1))+0;
-            int randomY = (int)(Math.random()*(board[0].length-0+1))+0;
-            suns.add(new sun(randomX, (double) randomY));
+            count = 0;
+            suns.add(new sun(randomX, (double) randomY, 0.001));
          }
+         
+        
 
          for(int i = 0; i < suns.size(); i++){
-            if(suns.get(i).getY() > 5){
+            if(suns.get(i).getY() > 7){
                suns.remove(i);
                i--;
             }else if(suns.get(i).isRemoved()){
@@ -445,6 +460,12 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
             for(int j = 0; j < plantBoard[0].length; j++){
                if(plantBoard[i][j] != null){
                   plantBoard[i][j].incrementFrame();//increments all plant's frames in plantBoard by 1
+                  //only for sunflowers
+                  if(plantBoard[i][j].getDelay() == sunFlowerDelay && plantBoard[i][j].getDamage() == 0 && plantBoard[i][j].getCurrentFrame() > sunFlowerDelay){
+                     suns.add(new sun(plantBoard[i][j].getX(), plantBoard[i][j].getY()+1, 0));
+                     plantBoard[i][j].setCurrentFrame(0);
+                     continue;
+                  }
                   projectile temp = plantBoard[i][j].shoot(); 
                   if(temp != null && temp.getDamage() != 0){//wall nuts or plants that do not do damage are not given a projectile.
                      for(zombie z : zombies){//checks if a zombie is in the same row as plant, then the plant will shoot.
@@ -555,12 +576,27 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
 
    public void mouseClicked( MouseEvent e )
    {
+      
       int button = e.getButton();
       if(button == MouseEvent.BUTTON1 || button == MouseEvent.BUTTON3)
       {
+         if(mouseX < board[0].length*SIZE && mouseY > 50){
+            int mouseC = (mouseX/SIZE);
+            int mouseR = (mouseY/SIZE);
+            for(int i = 0; i < suns.size(); i++){
+               //System.out.println("The mouse location is x: " + mouseC + " y: " + mouseR + "The sun location is x: " + suns.get(i).getX() + " y: " + suns.get(i).getY());
+               if(distanceOf(mouseC, mouseR, suns.get(i).getX(), suns.get(i).getY()) < 2){
+                  money+=50;
+                  suns.remove(i);
+                  i--;
+                  repaint();
+               }
+            }
+         }
          if(mouseX < board[0].length*SIZE && mouseY < 100){
             int mouseC = (mouseX/SIZE);
             int mouseR = (mouseY/SIZE);
+           
             //System.out.println(mouseC + " " + mouseR);
             if(mouseC == 0 && mouseR == 0){//for peashooter
                if(money >= 100){//cost
@@ -600,7 +636,17 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
                   selectedPlant = buyMenu[4].copy();
                   money -= 400;
                }else{
-                  System.out.println("Not enoug money");
+                  System.out.println("Not enough money");
+               }
+               repaint();
+            }
+            else if(mouseC == 6 && mouseR == 0){
+               if(money >= 50){
+                  selected = 5;
+                  selectedPlant = buyMenu[5].copy();
+                  money -= 50;
+               }else{
+                  System.out.println("Not enough money");
                }
                repaint();
             }

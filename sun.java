@@ -2,10 +2,12 @@ class sun{
     private int x;
     private double y;
 	private boolean removed;
-    public sun(int x, double y){
+	private double decrease;
+    public sun(int x, double y, double decrease){
         this.x = x;
         this.y = y;
 		removed = false;
+		this.decrease = decrease;
     }
 
 	public int getX() {
@@ -25,7 +27,7 @@ class sun{
 	}
     
     public void decreaseY(){
-        y+=0.01;
+        y+=decrease;
     }
 
 	public void setRemoved(boolean r){

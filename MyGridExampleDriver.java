@@ -12,7 +12,7 @@
       public static void main(String[]args)
       {
          screen = new MyGridExample();
-         JFrame frame = new JFrame("Vegetation vs undead");	//window title
+         JFrame frame = new JFrame("Vegetation vs Ghouls");	//window title
          frame.setSize(616, 439);					//Size of game window
          frame.setLocation(100, 50);				//location of game window on the screen
          frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
