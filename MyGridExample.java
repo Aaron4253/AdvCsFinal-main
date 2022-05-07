@@ -77,7 +77,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
       addMouseMotionListener( this );
       mouseX = 0;
       mouseY = 0;
-      money = 10000;
+      money = 300;
       board = new int[5][10];      //background
       pieces = new int[5][10];     //pieces that go on top of the background
       //timer
@@ -145,7 +145,6 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
       g.drawImage(sunFlowerIcon.getImage(), 340, 20, SIZE, SIZE, null);
    
       int x =0, y = 100;	//if y is ever changed, go to int mouseR = ((mouseY-100)/SIZE); and change its value  //upper left corner location of where image will be drawn
-      int q = 0, w = 100;
       for(int r=0;r<board.length;r++)
       {
          x = 0;						            //reset the row distance
@@ -372,7 +371,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
       {
          //for zombies
          count++;
-         boolean spawnRate = (Math.random() < 0.0025);//controls the rate at which zombies are randomly spawned
+         boolean spawnRate = (Math.random() < (0.00025));//controls the rate at which zombies are randomly spawned
          boolean sunSpawnRate = count > 5000;
          if(spawnRate){
             int random = (int)(Math. random()*(4-0+1))+0;//controls the lane that the zombie is spawned in
@@ -505,7 +504,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
                            //System.out.println(distanceOf(zombies.get(k).getX(), zombies.get(k).getY(), projectiles.get(j).getX(), projectiles.get(j).getY()) + " the x of zombie: " + zombies.get(k).getX() + "the y of zombie: " + zombies.get(k).getY());
                            if(distanceOf(zombies.get(k).getX(), zombies.get(k).getY(), projectiles.get(j).getX(), projectiles.get(j).getY()) < 2){
                               int damageFallOffCalculation = (int)(((2 - distanceOf(zombies.get(k).getX(), zombies.get(k).getY(), projectiles.get(j).getX(), projectiles.get(j).getY()))/2 + 0.35) * projectiles.get(j).getDamage());
-                              //^damage calculation: zombies hit in the center are dealt 135% of the bomb's damage, falls off based on distance, at farthest distance zombie is dealt 35% damage.
+                              //^damage calculation: zombies hit in the center are dealt 135% of the bomb's damage, falls off based on distance, at farthest distance zombiea are dealt 35% damage.
                               zombies.get(k).deductHp(damageFallOffCalculation);
                               if(zombies.get(k).getHealth() <= 0){//check if a zombie died. If so, zombies is removed 
                                  incineratedZombies.add(new incineratedZombie(zombies.get(k).getX(), zombies.get(k).getY(), 300));
@@ -527,7 +526,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
                      if(projectiles.get(j).getColor().equals("blue")){
                         zombies.get(index).setMovementSpeed(0.0002);
                         zombies.get(index).setFrozen(true);
-                           if(zombies.get(index).getHealth() <= 0){//check if a zombie died. If so, zombies is removed 
+                           if(zombies.get(index).getHealth() <= 0){//check if a zombie died. If so, zombie is removed 
                               dyingZombies.add(new dyingZombie(zombies.get(index).getX(), zombies.get(index).getY(), 300, true));
                               zombies.remove(index);
                               money += 50;
@@ -568,8 +567,7 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
                   }
                }
             }
-         }
-         
+         }         
          repaint();
       }
    }
@@ -689,7 +687,6 @@ public class MyGridExample extends JPanel implements MouseListener, MouseMotionL
                }
                else//illegal move
                {
-                  Sound.randomNote();
                }
             }
             else
