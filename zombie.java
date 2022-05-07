@@ -1,5 +1,3 @@
-import javax.swing.ImageIcon;
-
 class zombie{
     Double x;
     int y;
@@ -9,8 +7,6 @@ class zombie{
     int currentFrame;
     boolean isEating;
     Double movementSpeed;
-    private int pictureIndex = 0;
-    private boolean removed;
     private boolean frozen;
     private final int randomState;
     public zombie(Double x, int y, int health, int damage, boolean frozen){

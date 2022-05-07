@@ -1,5 +1,3 @@
-import javax.swing.ImageIcon;
-
 class plant{
     int x;
     int y;
